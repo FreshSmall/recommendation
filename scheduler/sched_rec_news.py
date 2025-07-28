@@ -1,3 +1,9 @@
+'''
+author: error: git config user.name & please set dead value or install git
+date: Do not edit
+team: wuhan operational dev.
+Description: 
+'''
 #!/usr/bin/env python 
 # -*- coding: utf-8 -*-
 #                       _oo0oo_
@@ -26,6 +32,11 @@
 # @Time    : 2021-10-12 20:49
 # @Author  : Hongbo Huang
 # @File    : sched_rec_news.py
+import sys
+import os
+# 添加项目根目录到Python路径
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from read_data import read_news_data
 from models.recall.item_base_cf import ItemBaseCF
 import pickle
@@ -47,11 +58,19 @@ class SchedRecNews(object):
         """
         user_list = self.news_data.rec_user()
         # self.news_data.cal_score()
-        self.news_model_train = ItemBaseCF("../data/news_score/news_log.csv")
+        
+        # 获取项目根目录路径
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        project_root = os.path.dirname(current_dir)
+        csv_path = os.path.join(project_root, "data", "news_score", "news_log.csv")
+        model_path = os.path.join(project_root, "data", "recall_model", "CF_model", "cf_news_recommend.m")
+        
+        self.news_model_train = ItemBaseCF(csv_path)
         self.news_model_train.cf_item_train()
         # 模型固化
-        with open("../data/recall_model/CF_model/cf_news_recommend.m", mode='wb') as article_f:
+        with open(model_path, mode='wb') as article_f:
             pickle.dump(self.news_model_train, article_f)
+        print("news_model_train to file finish...")
         for user_id in user_list:
             self.rec_list(user_id)
 

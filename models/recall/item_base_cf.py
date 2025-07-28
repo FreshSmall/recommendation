@@ -60,7 +60,6 @@ class ItemBaseCF(object):
 
     def cf_item_train(self):
         """
-
         :return:相似度矩阵：{content_id:{content_id:score}}
         """
         print("start train")
